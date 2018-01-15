@@ -1,0 +1,7 @@
+datadog>=0.16.0
+cfn-response>=0.0.4
+troposphere>=1.9.5
+awacs>=0.7.0
+boto3>=1.4.6
+cfn-encrypt>=0.0.10
+
