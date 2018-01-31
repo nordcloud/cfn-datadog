@@ -13,10 +13,11 @@ for i in open("requirements.txt").readlines():
         REQUIREMENTS.append(i.strip())
 setup(
     name="cfn-datadog",
-    version="0.0.10",
+    version="0.0.12",
     description="Lambda cloudformation custom resource that sets up datadog alerts",
     long_description=open("README.md").read(),
     author="Martin Kaberg",
+    packages=["cfn_datadog"],
     author_email="martin.kaberg@nordcloud.com",
     url="https://github.com/nordcloud/cfn-datadog",
     install_requires=REQUIREMENTS,

@@ -57,7 +57,7 @@ def handler(event, context):
         initialize(app_key=application_key, api_key=api_key)
 
         logger.debug("event: %s", event)
-
+        event['ResourceProperties']["query"] = event['ResourceProperties']["query"].lower()
         if event['RequestType'] == 'Delete':
             delete(event['PhysicalResourceId'])
         elif event['RequestType'] == 'Create':
