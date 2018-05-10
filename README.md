@@ -17,7 +17,7 @@ The lambda is invoked via cloudformation custom resource. This repo
 supplies custom resource classes for all the 4 Monitor types.
 Custom resources have the same exact data structure as the DD api
 
-It uses https://bitbucket.org/nordcloud/cfn_encrypt to securely store
+It uses https://github.com/nordcloud/cfn-encrypt to securely store
 datadog api credentials
 
 ### How do I get set up? ###
@@ -38,7 +38,7 @@ chmod +x create_zip.sh && ./create_zip.sh
 ~~~~
 python lambda-template.py > /tmp/lambda.template
 ~~~~
-* If you have not already set up your encrypt stack do that now ( https://bitbucket.org/nordcloud/cfn_encrypt )
+* If you have not already set up your encrypt stack do that now ( https://github.com/nordcloud/cfn-encrypt )
 * create a stack from your `lambda.template` file
 * The lambda is now set up and ready to use.
 
