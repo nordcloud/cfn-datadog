@@ -1,5 +1,6 @@
 from troposphere import AWSProperty
 from . import shared_options, DatadogBase
+
 try:
     unicode = unicode
 except NameError:

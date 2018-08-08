@@ -8,7 +8,7 @@ import logging
 import os
 import traceback
 from datadog import initialize, api
-from cfn_datadog import MetricAlert, Composite, EventAlert, ServiceCheck
+from cfn_datadog import TimeBoard
 
 # Decrypt code should run once and variables stored outside of the function
 # handler so that these are decrypted once per container
@@ -16,9 +16,10 @@ api_key = boto3.client('kms').decrypt(CiphertextBlob=b64decode(os.environ['api_k
 application_key = boto3.client('kms').decrypt(CiphertextBlob=b64decode(os.environ['application_key']))['Plaintext']
 
 
+# TODO Dry this code: remove duplicate code
 def handler(event, context):
     """
-    
+
     """
     logger = logging.getLogger("datadog")
     logger.setLevel(os.environ.get("LOG_LEVEL", logging.DEBUG))
@@ -32,26 +33,19 @@ def handler(event, context):
         logger.info("Created a %s Timeboard", type)
         logger.debug("Response object: %s", response)
 
-    def create(type, properties):
-        response = api.Monitor.create(type=type, **properties)
-        cfnresponse.send(event, context, cfnresponse.SUCCESS, physical_resource_id=str(response['id']))
-        logger.info("Created a %s monitor", type)
-        logger.debug("Response object: %s", response)
-
     def delete(id):
         if id == 'FAILURE':
             cfnresponse.send(event, context, cfnresponse.SUCCESS, physical_resource_id='FAILURE')
             return
-        response = api.Monitor.delete(id)
+        response = api.Timeboard.delete(id)
         cfnresponse.send(event, context, cfnresponse.SUCCESS, physical_resource_id=str(response['deleted_monitor_id']))
         logger.info("Deleted monitor: %s", id)
         logger.debug("Response object: %s", response)
 
     def update(id, properties):
-
         logger.debug("Old properties: %s", event['OldResourceProperties'])
         logger.debug("New properties: %s", properties)
-        response = api.Monitor.update(id, **properties)
+        response = api.Timeboard.update(id, **properties)
         cfnresponse.send(event, context, cfnresponse.SUCCESS, physical_resource_id=str(response['id']))
         logger.info("Updated monitor: %s", id)
         logger.debug("Response object: %s", response)
@@ -65,13 +59,7 @@ def handler(event, context):
         if event['RequestType'] == 'Delete':
             delete(event['PhysicalResourceId'])
         elif event['RequestType'] == 'Create':
-            types = {
-                MetricAlert.resource_type: "metric alert",
-                ServiceCheck.resource_type: "service check",
-                EventAlert.resource_type: "event alert",
-                Composite.resource_type: "composite",
-            }
-            create(types[event['ResourceType']], event['ResourceProperties'])
+            createTimeboard(event['ResourceProperties'])
         elif event['RequestType'] == 'Update':
             update(event['PhysicalResourceId'], event["ResourceProperties"])
         else:

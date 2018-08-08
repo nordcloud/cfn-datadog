@@ -2,6 +2,7 @@ from troposphere.validators import boolean, positive_integer
 from troposphere import cloudformation, depends_on_helper
 from troposphere.cloudformation import AWSHelperFn, AWSObject
 import types, sys
+
 try:
     unicode = unicode
 except NameError:
@@ -100,3 +101,4 @@ from .metric_alert import MetricAlert, MetricAlertOptions, Thresholds
 from .service_check import ServiceCheck, ServiceCheckOptions
 from .composite import CompositeOptions, Composite
 from .event_alert import EventAlertOptions, EventAlert
+from .timeboard import TimeBoard
