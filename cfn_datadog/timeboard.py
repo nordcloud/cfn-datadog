@@ -1,6 +1,5 @@
+from . import DatadogBase, CustomProperty
 from troposphere import AWSProperty
-
-from . import DatadogBase
 
 try:
     unicode = unicode
@@ -28,7 +27,7 @@ class Definition(AWSProperty):
 class Graph(AWSProperty):
     props = {
         'definition': (Definition, True),
-        'title': (baseString, True)
+        'title': (baseString, False)
     }
 
 
@@ -48,11 +47,11 @@ class TimeBoard(DatadogBase):
     resource_type = "Custom::DataDogTimeBoard"
     props = {
         'ServiceToken': (baseString, True),
-        'title': (baseString, True),
+        'title': (baseString, False),
         'description': (baseString, True),
         'graphs': ([Graph], True),
-        'template_variables': ([TemplateVariable, False]),
-        'ready_only': (bool, True)
+        'template_variables': ([TemplateVariable], False),
+        'read_only': (bool, True)
     }
 
     # title = "My Timeboard"

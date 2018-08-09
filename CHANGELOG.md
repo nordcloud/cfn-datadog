@@ -3,4 +3,4 @@
 
 ## 0.0.12
 - Initial version
-- Add monitor to datadog using Troposphere and Cloudformation
+- Add monitor to cfn-datadog using Troposphere and Cloudformation
