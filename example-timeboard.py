@@ -14,8 +14,8 @@ time_board_arn = ImportValue(Sub("${DatadogLambdaStackname}-TimeboardDatadogLamb
 t.add_resource(Timeboard(
     'ExampleTimeBoard',
     ServiceToken=time_board_arn,
-    TimeboardTitle="Automated Test Board",
-    description="ffff",
+    TimeboardTitle="Automated Datadog Test Board",
+    description="Automated Datadog timeboard created through Cloudformation",
     graphs=[Graph(
         GraphTitle="Example graph",
         definition=Definition(
@@ -25,7 +25,7 @@ t.add_resource(Timeboard(
             )],
             viz="timeseries"
         )
-    ),Graph(
+    ), Graph(
         GraphTitle="Example graph 2",
         definition=Definition(
             events=[],
@@ -44,31 +44,4 @@ t.add_resource(Timeboard(
     read_only=True
 ))
 
-
 print(t.to_json())
-
-# title = "My Timeboard"
-# description = "An informative timeboard."
-# graphs = [{
-#     "definition": {
-#         "events": [],
-#         "requests": [
-#             {"q": "avg:system.mem.free{*}"}
-#         ],
-#         "viz": "timeseries"
-#     },
-#     "title": "Average Memory Free"
-# }]
-#
-# template_variables = [{
-#     "name": "host1",
-#     "prefix": "host",
-#     "default": "host:my-host"
-# }]
-#
-# read_only = True
-# api.Timeboard.create(title=title,
-#                      description=description,
-#                      graphs=graphs,
-#                      template_variables=template_variables,
-#                      read_only=read_only)
