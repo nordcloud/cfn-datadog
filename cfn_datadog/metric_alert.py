@@ -1,6 +1,7 @@
 from troposphere import AWSProperty
 from troposphere.validators import positive_integer
 from . import shared_options, DatadogBase
+
 try:
     unicode = unicode
 except NameError:
@@ -41,6 +42,3 @@ class MetricAlert(DatadogBase):
         'tags': ([basestring], False),
         'options': (MetricAlertOptions, False)
     }
-
-
-

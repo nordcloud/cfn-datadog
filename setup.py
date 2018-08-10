@@ -3,10 +3,11 @@ try:
 except ImportError:
     from distutils.core import setup
 import re
-REQUIREMENTS=[]
-DEP_LINKS=[]
+
+REQUIREMENTS = []
+DEP_LINKS = []
 for i in open("requirements.txt").readlines():
-    if re.match('.*://.*',i):
+    if re.match('.*://.*', i):
         DEP_LINKS.append(i.strip() + "-0")
         REQUIREMENTS.append((i.split("=")[1].strip()))
     else:
