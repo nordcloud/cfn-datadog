@@ -13,7 +13,7 @@ t.add_resource(MetricAlert(
     'Alert2',
     query=Join("", ["avg(last_1h):avg:system.net.bytes_rcvd{host:", "bla", "} < 40"]),
     ServiceToken=ImportValue(
-        Sub("${DatadogLambdaStackname}-LambdaArn")),
+        Sub("${DatadogLambdaStackname}-MonitorDatadogLambdaArn")),
     name="Bytes received on mytesthost",
     message="bla msg222 @richard.vanbeers",
     tags=["tag1", "tag2"],

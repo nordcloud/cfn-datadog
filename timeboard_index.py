@@ -8,7 +8,6 @@ import logging
 import os
 import traceback
 from datadog import initialize, api
-from cfn_datadog import TimeBoard
 
 # Decrypt code should run once and variables stored outside of the function
 # handler so that these are decrypted once per container
@@ -16,7 +15,6 @@ api_key = boto3.client('kms').decrypt(CiphertextBlob=b64decode(os.environ['api_k
 application_key = boto3.client('kms').decrypt(CiphertextBlob=b64decode(os.environ['application_key']))['Plaintext']
 
 
-# TODO Dry this code: remove duplicate code
 def handler(event, context):
     """
 
@@ -29,25 +27,25 @@ def handler(event, context):
 
     def createTimeboard(properties):
         response = api.Timeboard.create(**properties)
-        cfnresponse.send(event, context, cfnresponse.SUCCESS, physical_resource_id=str(response['id']))
-        logger.info("Created a %s Timeboard", type)
+        logger.info("Created a %s Timeboard")
         logger.debug("Response object: %s", response)
+        cfnresponse.send(event, context, cfnresponse.SUCCESS, physical_resource_id=str(response["dash"]["id"]))
 
     def delete(id):
         if id == 'FAILURE':
             cfnresponse.send(event, context, cfnresponse.SUCCESS, physical_resource_id='FAILURE')
             return
         response = api.Timeboard.delete(id)
-        cfnresponse.send(event, context, cfnresponse.SUCCESS, physical_resource_id=str(response['deleted_monitor_id']))
-        logger.info("Deleted monitor: %s", id)
+        cfnresponse.send(event, context, cfnresponse.SUCCESS, physical_resource_id=None)
+        logger.info("Deleted Timeboard: %s", id)
         logger.debug("Response object: %s", response)
 
     def update(id, properties):
         logger.debug("Old properties: %s", event['OldResourceProperties'])
         logger.debug("New properties: %s", properties)
         response = api.Timeboard.update(id, **properties)
-        cfnresponse.send(event, context, cfnresponse.SUCCESS, physical_resource_id=str(response['id']))
-        logger.info("Updated monitor: %s", id)
+        cfnresponse.send(event, context, cfnresponse.SUCCESS, physical_resource_id=id)
+        logger.info("Updated Timeboard: %s", id)
         logger.debug("Response object: %s", response)
 
     try:
@@ -55,7 +53,11 @@ def handler(event, context):
         initialize(app_key=application_key, api_key=api_key)
 
         logger.debug("event: %s", event)
-        event['ResourceProperties']["query"] = event['ResourceProperties']["query"].lower()
+        event['ResourceProperties']["title"] = event['ResourceProperties'].pop("TimeboardTitle")
+
+        for graph in event['ResourceProperties']['graphs']:
+            graph["title"] = graph.pop("GraphTitle")
+
         if event['RequestType'] == 'Delete':
             delete(event['PhysicalResourceId'])
         elif event['RequestType'] == 'Create':

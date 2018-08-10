@@ -8,10 +8,11 @@
 
 ### What does it do? ###
 
-It setups a lambda function that communicate with the monitors resource
+It setups a lambda function that communicate with the monitors and timeboard resource
 on the datadog api
 
 https://docs.datadoghq.com/api/#monitors
+https://docs.datadoghq.com/api/#timeboards
 
 The lambda is invoked via cloudformation custom resource. This repo
 supplies custom resource classes for all the 4 Monitor types.
@@ -19,6 +20,8 @@ Custom resources have the same exact data structure as the DD api
 
 It uses https://github.com/nordcloud/cfn-encrypt to securely store
 datadog api credentials
+
+This repository makes use of [Troposphere](https://github.com/cloudtools/troposphere)
 
 ### How do I get set up? ###
 
@@ -54,7 +57,8 @@ Import the custom resource classes you want to use
 ~~~~
 from cfn_datadog import (
     MetricAlert, MetricAlertOptions, Composite, CompositeOptions,
-    EventAlert, EvenAlertOptions, ServiceCheck, ServiceCheckOptions
+    EventAlert, EvenAlertOptions, ServiceCheck, ServiceCheckOptions,
+    Timeboard
 )
 ~~~~
 
@@ -68,6 +72,8 @@ datadog_lambda_stackname = t.add_parameter(Parameter(
 ~~~~
 
 Add the custom resource to the template: For documentation see datadog api
+
+##### Example MetricAlert
 ~~~~
 t.add_resource(MetricAlert(
     'Alert2',
@@ -81,6 +87,33 @@ t.add_resource(MetricAlert(
         notify_no_data= True,
         no_data_timeframe=50
     )
+))
+~~~~
+
+##### Example Timeboard
+
+~~~~
+t.add_resource(Timeboard(
+    'ExampleTimeBoard',
+    ServiceToken=ImportValue(Sub("${DatadogLambdaStackname}-TimeboardLambdaArn")),
+    TimeboardTitle="testboard",
+    description="Sample testboard",
+    graphs=[Graph(
+        definition=Definition(
+            events=[],
+            requests=[Request(
+                q="avg:system.mem.free{*}"
+            )],
+            viz="timeseries"
+        ),
+        title="Average Memory Free"
+    )],
+    template_variables=[TemplateVariable(
+        name="host1",
+        prefix="host",
+        default="host:my-host"
+    )],
+    read_only=True
 ))
 ~~~~
 

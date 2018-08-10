@@ -32,7 +32,7 @@ lambda_package = t.add_parameter(Parameter(
     Description="Location of lambda zip file. ie: mybucket,datadog_lambda.zip"
 ))
 
-log_level = t.add_resource(Parameter(
+log_level = t.add_parameter(Parameter(
     "LogLevel",
     Type="String",
     AllowedValues=[
@@ -54,7 +54,7 @@ log_group = t.add_resource(logs.LogGroup(
 
 
 kms_key_arn = ImportValue(Sub("${EncryptLambdaStack}-KmsKeyArn"))
-lambda_arn = ImportValue(Sub("${EncryptLambdaStack}-LambdaArn"))
+lambda_arn = ImportValue(Sub("${EncryptLambdaStack}-EncryptLambdaArn"))
 
 datadog_lambda_role = t.add_resource(iam.Role(
     "DatadogLambdaRole",
@@ -154,18 +154,18 @@ t.add_output(Output(
     Value=GetAtt(datadog_monitor_lambda, "Arn"),
     Export=Export(
         Sub(
-            "${AWS::StackName}-LambdaArn"
+            "${AWS::StackName}-MonitorDatadogLambdaArn"
         )
     )
 ))
 
 t.add_output(Output(
-    "TimeBoardDatadogLambdaArn",
+    "TimeboardDatadogLambdaArn",
     Description="Timeboard lamdba arn",
     Value=GetAtt(datadog_timeboard_lambda, "Arn"),
     Export=Export(
         Sub(
-            "${AWS::StackName}-LambdaArn"
+            "${AWS::StackName}-TimeboardDatadogLambdaArn"
         )
     )
 ))

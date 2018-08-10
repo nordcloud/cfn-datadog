@@ -12,28 +12,7 @@ except NameError:
     bytes = str
 
 
-class CustomProperty(AWSProperty):
-    """
-    Custom property to be able to use title in a property,
-    this is needed for the timeboards because they use the title property.
-    """
-    dictname = None
-
-    def __init__(self, title=None, **kwargs):
-        self.title = None
-        print("title")
-        print(title)
-
-        print("self.title")
-        print(self.title)
-
-        print("kwargs")
-        print(kwargs)
-        super().__init__(**kwargs)
-
-
 class DatadogBase(AWSObject):
-
     """
     Removed condition to not validate if based on custom:
     if type_name == 'AWS::CloudFormation::CustomResource' or \
@@ -122,4 +101,4 @@ from .metric_alert import MetricAlert, MetricAlertOptions, Thresholds
 from .service_check import ServiceCheck, ServiceCheckOptions
 from .composite import CompositeOptions, Composite
 from .event_alert import EventAlertOptions, EventAlert
-from .timeboard import TimeBoard, Graph, TemplateVariable, Definition, Request
+from .timeboard import Timeboard, Graph, TemplateVariable, Definition, Request

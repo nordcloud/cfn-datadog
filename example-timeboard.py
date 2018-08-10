@@ -1,4 +1,4 @@
-from cfn_datadog import TimeBoard, Graph, TemplateVariable, Definition, Request
+from cfn_datadog import Timeboard, Graph, TemplateVariable, Definition, Request
 from troposphere import Parameter, Template, Join, ImportValue, Sub
 
 t = Template()
@@ -6,24 +6,36 @@ t = Template()
 datadog_lambda_stackname = t.add_parameter(Parameter(
     "DatadogLambdaStackname",
     Type="String",
-    Description="Datadog lambda stackname"
+    Description="Stack name of cfn-datadog"
 ))
 
-t.add_resource(TimeBoard(
+time_board_arn = ImportValue(Sub("${DatadogLambdaStackname}-TimeboardDatadogLambdaArn"))
+
+t.add_resource(Timeboard(
     'ExampleTimeBoard',
-    ServiceToken=ImportValue(Sub("${DatadogLambdaStackname}-LambdaArn")),
-    title="testboard",
+    ServiceToken=time_board_arn,
+    TimeboardTitle="Automated Test Board",
     description="ffff",
     graphs=[Graph(
+        GraphTitle="Example graph",
         definition=Definition(
             events=[],
             requests=[Request(
                 q="avg:system.mem.free{*}"
             )],
             viz="timeseries"
-        ),
-        # title="AverageMemoryFree2"
-    )],
+        )
+    ),Graph(
+        GraphTitle="Example graph 2",
+        definition=Definition(
+            events=[],
+            requests=[Request(
+                q="avg:system.mem.free{*}"
+            )],
+            viz="timeseries"
+        )
+    ),
+    ],
     template_variables=[TemplateVariable(
         name="host1",
         prefix="host",

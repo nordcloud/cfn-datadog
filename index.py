@@ -26,12 +26,6 @@ def handler(event, context):
     ch = logging.StreamHandler()
     logger.addHandler(ch)
 
-    def createTimeboard(properties):
-        response = api.Timeboard.create(**properties)
-        cfnresponse.send(event, context, cfnresponse.SUCCESS, physical_resource_id=str(response['id']))
-        logger.info("Created a %s Timeboard", type)
-        logger.debug("Response object: %s", response)
-
     def create(type, properties):
         response = api.Monitor.create(type=type, **properties)
         cfnresponse.send(event, context, cfnresponse.SUCCESS, physical_resource_id=str(response['id']))
