@@ -1,7 +1,5 @@
 # README #
 
-
-
 ### What is this repository for? ###
 
 * To setup datadog monitoring via cloudformation
@@ -25,6 +23,10 @@ This repository makes use of [Troposphere](https://github.com/cloudtools/troposp
 
 ### How do I get set up? ###
 
+#### With pip ####
+pip install cfn-encrypt cfn-datadog
+
+#### From source ####
 * clone this repo
 ~~~~
 git clone git@github.com.org:nordcloud/cfn-datadog.git
